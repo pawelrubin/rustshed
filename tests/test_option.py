@@ -6,7 +6,7 @@ from typing import Callable
 import pytest
 
 from rustshed.list import SafeList
-from rustshed.option import Null, Option, Some, to_option
+from rustshed.option_result import Null, Option, Some, to_option
 from rustshed.panic import Panic
 
 
@@ -192,6 +192,7 @@ def test_zip() -> None:
     z = Null
 
     assert x.zip(y) == Some((1, "hi"))
+    assert x.zip(z) == Null
     assert z.zip(z) == Null
 
 
@@ -202,10 +203,12 @@ def test_zip_with() -> None:
         y: float
 
     x = Some(17.5)
-    y = Some(42.7)
+    y = Some(42.5)
 
     assert x.zip_with(y, Point) == Some(Point(17.5, 42.5))
     assert x.zip_with(Null, Point) == Null
+    assert Null.zip_with(x, Point) == Null
+    assert Null.zip_with(Null, Point) == Null
 
 
 def test_unzip() -> None:
