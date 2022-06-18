@@ -1,6 +1,6 @@
 from typing import SupportsIndex, TypeVar
 
-from rustshed.option import Null, Option, Some
+from rustshed.option_result import Null, Option, Some
 
 T = TypeVar("T")
 
