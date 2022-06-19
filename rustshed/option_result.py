@@ -26,8 +26,10 @@ P = ParamSpec("P")
 
 
 class ResultShortcutError(Exception, Generic[E_co]):
-    def __init__(self, error: Err[E_co], *args: object) -> None:
-        super().__init__(*args)
+    def __init__(self, error: Err[E_co]) -> None:
+        super().__init__(
+            f"The Q operator used without rustshed.result_shortcut decorator!"
+        )
         self.error = error
 
 
