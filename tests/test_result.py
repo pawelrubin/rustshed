@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import os
 from dataclasses import dataclass
 from enum import Enum, auto
@@ -7,7 +8,15 @@ from typing import Callable
 
 import pytest
 
-from rustshed.option_result import Err, Null, Ok, Result, Some, to_result
+from rustshed.option_result import (
+    Err,
+    Null,
+    Ok,
+    Result,
+    Some,
+    result_shortcut,
+    to_result,
+)
 from rustshed.panic import Panic
 
 
@@ -80,9 +89,7 @@ def test_err() -> None:
 def test_map() -> None:
     numbers_as_strs = ["1", "2", "E", "A", "5"]
 
-    @to_result
-    def parse(s: str) -> int:
-        return int(s)
+    parse = to_result(int)
 
     numbers: list[int] = []
     for number_as_str in numbers_as_strs:
@@ -278,3 +285,17 @@ def test_contains_err() -> None:
 
     x = Err("Some other error message")
     assert x.contains_err("Some error message") is False
+
+
+def test_result_shortcut() -> None:
+    def sqrt_then_to_string(x: float) -> Result[str, str]:
+        return to_result[ValueError](sqrt)(x).map(str).map_err(str)
+
+    @result_shortcut
+    def operation(x: float) -> Result[str, str]:
+        sq = sqrt_then_to_string(x).Q
+        print(sq)
+        return Ok(sq)
+
+    assert operation(16) == Ok("4.0")
+    assert operation(-2) == Err("math domain error")
