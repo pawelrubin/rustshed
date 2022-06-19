@@ -5,7 +5,6 @@ on: [push]
 env:
   POETRY_VERSION: 1.1.13
   POETRY_VIRTUALENVS_IN_PROJECT: true
-  POETRY_URL: https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py
 
 jobs:
   lint-and-test:
@@ -61,3 +60,9 @@ jobs:
 
       - name: Run tests
         run: poetry run pytest tests --cov-report xml:cov.xml --cov rustshed
+
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./cov.xml
+          verbose: true # optional (default = false)
