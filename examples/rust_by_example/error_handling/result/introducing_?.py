@@ -1,7 +1,6 @@
-from rustshed import Result, Ok, Err
+from examples.shared import ParseIntError, parse
+from rustshed import Err, Ok, Result
 from rustshed.option_result import result_shortcut
-
-from examples.shared import parse, ParseIntError
 
 
 @result_shortcut
