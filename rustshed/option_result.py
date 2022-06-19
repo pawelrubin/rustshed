@@ -25,6 +25,16 @@ F = TypeVar("F")
 P = ParamSpec("P")
 
 
+class ResultShortcutError(Exception, Generic[E_co]):
+    def __init__(self, error: Err[E_co], *args: object) -> None:
+        super().__init__(*args)
+        self.error = error
+
+
+class OptionShortcutError(Exception):
+    ...
+
+
 class _BaseOption(ABC, Generic[T_co]):
     @abstractmethod
     def is_some(self) -> TypeGuard[Some[T_co]]:
@@ -193,6 +203,11 @@ class _BaseOption(ABC, Generic[T_co]):
         Converts from Option<Option<T>> to Option<T>.
         """
 
+    @property
+    @abstractmethod
+    def Q(self) -> T_co:
+        ...
+
 
 @dataclass
 class Some(_BaseOption[T_co]):
@@ -313,6 +328,10 @@ class Some(_BaseOption[T_co]):
                 # it will never happen
                 raise
 
+    @property
+    def Q(self) -> T_co:
+        return self.value
+
 
 @dataclass
 class NullType(_BaseOption[Any]):
@@ -387,6 +406,10 @@ class NullType(_BaseOption[Any]):
 
     def flatten(self: _BaseOption[_BaseOption[Any]]) -> NullType:
         return Null
+
+    @property
+    def Q(self) -> NoReturn:
+        raise OptionShortcutError
 
 
 Option = Some[T_co] | NullType
@@ -592,6 +615,11 @@ class _BaseResult(ABC, Generic[T_co, E_co]):
         Returns true if the result is an Err value containing the given value.
         """
 
+    @property
+    @abstractmethod
+    def Q(self) -> T_co:
+        ...
+
 
 @dataclass
 class Ok(_BaseResult[T_co, Any]):
@@ -662,6 +690,10 @@ class Ok(_BaseResult[T_co, Any]):
 
     def contains_err(self, f: Any) -> bool:
         return False
+
+    @property
+    def Q(self) -> T_co:
+        return self.value
 
 
 @dataclass
@@ -734,6 +766,10 @@ class Err(_BaseResult[Any, E_co]):
     def contains_err(self, f: object) -> bool:
         return self.error == f
 
+    @property
+    def Q(self) -> NoReturn:
+        raise ResultShortcutError(self)
+
 
 Result = Ok[T_co] | Err[E_co]
 
@@ -761,3 +797,29 @@ class to_result_type:
 to_result = to_result_type()
 
 IOResult = Result[T_co, IOError]
+
+RT = TypeVar("RT")
+
+
+def result_shortcut(
+    f: Callable[P, Result[T_co, E_co]]
+) -> Callable[P, Result[T_co, E_co]]:
+    @wraps(f)
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result[T_co, E_co]:
+        try:
+            return f(*args, **kwargs)
+        except ResultShortcutError as err:
+            return cast(Result[T_co, E_co], err.error)
+
+    return wrapper
+
+
+def option_shortcut(f: Callable[P, Option[T_co]]) -> Callable[P, Option[T_co]]:
+    @wraps(f)
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> Option[T_co]:
+        try:
+            return f(*args, **kwargs)
+        except OptionShortcutError:
+            return cast(Option[T_co], Null)
+
+    return wrapper

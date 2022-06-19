@@ -6,7 +6,7 @@ from typing import Callable
 import pytest
 
 from rustshed.list import SafeList
-from rustshed.option_result import Null, Option, Some, to_option
+from rustshed.option_result import Null, Option, Some, option_shortcut, to_option
 from rustshed.panic import Panic
 
 
@@ -236,3 +236,17 @@ def test_flatten() -> None:
     z: Option[Option[Option[int]]] = Some(Some(Some(6)))
     assert z.flatten() == Some(Some(6))
     assert z.flatten().flatten() == Some(6)
+
+
+def test_option_shortcut() -> None:
+    def sqrt_then_to_string(x: float) -> Option[str]:
+        return to_option(sqrt)(x).map(str)
+
+    @option_shortcut
+    def operation(x: float) -> Option[str]:
+        sq = sqrt_then_to_string(x).Q
+        print(sq)
+        return Some(sq)
+
+    assert operation(16) == Some("4.0")
+    assert operation(-2) == Null
