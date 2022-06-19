@@ -1,6 +1,5 @@
-from rustshed import Result, Err, Ok
-
 from examples.shared import ParseIntError, parse
+from rustshed import Err, Ok, Result
 
 
 def main() -> Result[None, ParseIntError]:

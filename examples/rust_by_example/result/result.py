@@ -1,7 +1,7 @@
-from enum import Enum, auto
 import math
+from enum import Enum, auto
 
-from rustshed import Result, Err, Ok, Panic
+from rustshed import Err, Ok, Panic, Result
 
 
 class MathError(Enum):

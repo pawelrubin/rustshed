@@ -1,6 +1,5 @@
-from rustshed import Result, Err, Ok
-
-from examples.shared import parse, ParseIntError
+from examples.shared import ParseIntError, parse
+from rustshed import Err, Ok, Result
 
 
 def multiply(first_number_str: str, second_number_str: str) -> int:

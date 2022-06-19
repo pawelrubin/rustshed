@@ -1,8 +1,8 @@
-from multiprocessing.sharedctypes import Value
 import os
 from dataclasses import dataclass
 from enum import Enum, auto
 from math import sqrt
+from multiprocessing.sharedctypes import Value
 from pathlib import Path
 from typing import Callable
 

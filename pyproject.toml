@@ -18,6 +18,16 @@ coverage = "^6.4.1"
 pre-commit = "^2.19.0"
 pytest-cov = "^3.0.0"
 
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+pretty = true
+show_error_codes = true
+disallow_any_unimported = true
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
