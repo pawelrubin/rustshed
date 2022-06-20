@@ -32,6 +32,11 @@ class ResultShortcutError(Exception, Generic[E_co]):
         )
         self.error = error
 
+    def __class_getitem__(cls, item: Any) -> type[ResultShortcutError[E_co]]:
+        # enables applying a type parameter for generic Exception class
+        # except ResultShortcutError[E] as err:
+        return cls
+
 
 class OptionShortcutError(Exception):
     ...
@@ -322,7 +327,7 @@ class Some(_BaseOption[T_co]):
     def flatten(self: Some[Option[U]]) -> Option[U]:
         ...  # pragma: no cover
 
-    def flatten(self: Some[Any]) -> Any:
+    def flatten(self: Some[NullType | Some[U]]) -> NullType | Some[U]:
         match self:
             case Some(NullType()):
                 return Null
@@ -375,7 +380,7 @@ class NullType(_BaseOption[Any]):
     def and_then(self, f: Callable[[Any], Option[U]]) -> NullType:
         return self
 
-    def filter(self, predicate: Callable[[T_co], bool]) -> NullType:
+    def filter(self, predicate: Callable[[Any], bool]) -> NullType:
         return self
 
     def or_(self, optb: Option[T_co]) -> Option[T_co]:
@@ -812,8 +817,8 @@ def result_shortcut(
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result[T_co, E_co]:
         try:
             return f(*args, **kwargs)
-        except ResultShortcutError as err:
-            return cast(Result[T_co, E_co], err.error)
+        except ResultShortcutError[E_co] as err:
+            return err.error
 
     return wrapper
 
