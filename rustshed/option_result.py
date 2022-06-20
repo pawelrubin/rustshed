@@ -208,7 +208,9 @@ class _BaseOption(ABC, Generic[T_co]):
     @property
     @abstractmethod
     def Q(self) -> T_co:
-        ...
+        """
+        TODO: docs
+        """
 
 
 @dataclass
