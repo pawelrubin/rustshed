@@ -3,7 +3,11 @@ name = "rustshed"
 version = "0.2.0"
 description = "Rust types in Python."
 authors = ["Paweł Rubin <pawelrubindev@gmail.com>"]
+keywords = ["rust", "result", "option"]
 license = "MIT License"
+readme = "README.md"
+homepage = "https://github.com/pawelrubin/rustshed"
+repository = "https://github.com/pawelrubin/rustshed"
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python :: 3.10",
