@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 from functools import partial
 from math import sqrt
-from typing import Callable
+from typing import Callable, SupportsIndex, TypeVar
 
 import pytest
 
-from rustshed.list import SafeList
 from rustshed.option_result import Null, Option, Some, option_shortcut, to_option
 from rustshed.panic import Panic
 
@@ -113,6 +112,15 @@ def test_and() -> None:
 
 
 def test_and_then() -> None:
+    T = TypeVar("T")
+
+    class SafeList(list[T]):
+        def get(self, index: SupportsIndex) -> Option[T]:
+            try:
+                return Some(self[index])
+            except IndexError:
+                return Null
+
     def sqrt_then_to_string(x: float) -> Option[str]:
         return to_option(sqrt)(x).map(str)
 
@@ -250,3 +258,7 @@ def test_option_shortcut() -> None:
 
     assert operation(16) == Some("4.0")
     assert operation(-2) == Null
+
+
+def test_null_to_str() -> None:
+    assert str(Null) == "Null"
