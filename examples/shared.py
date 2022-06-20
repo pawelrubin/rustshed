@@ -2,7 +2,7 @@ from rustshed import to_result
 
 
 class ParseIntError(ValueError):
-    ...
+    """An error which can be returned when parsing an integer."""
 
 
 @to_result[ParseIntError]
