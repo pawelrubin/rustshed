@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/pawelrubin/rustshed/compare/v0.2.0...v0.2.1) (2022-06-20)
+
+
+### Documentation
+
+* Improve pyproject.toml ([f5782ae](https://github.com/pawelrubin/rustshed/commit/f5782aeb82c2fe4e7658b52592bd7273712cd0da))
+
 ## [0.2.0](https://github.com/pawelrubin/rustshed/compare/v0.1.3...v0.2.0) (2022-06-20)
 
 
