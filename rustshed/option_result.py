@@ -344,6 +344,9 @@ class Some(_BaseOption[T_co]):
 
 @dataclass
 class NullType(_BaseOption[Any]):
+    def __str__(self) -> str:
+        return "Null"
+
     def is_some(self) -> TypeGuard[Some[Any]]:
         return False
 
@@ -627,7 +630,7 @@ class _BaseResult(ABC, Generic[T_co, E_co]):
     @property
     @abstractmethod
     def Q(self) -> T_co:
-        ...
+        ...  # pragma: no cover
 
 
 @dataclass
