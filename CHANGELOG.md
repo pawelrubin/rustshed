@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/pawelrubin/rustshed/compare/v0.1.0...v0.1.1) (2022-06-20)
+
+
+### Bug Fixes
+
+* Fix some type signatures. ([502500d](https://github.com/pawelrubin/rustshed/commit/502500d8e172829db4b96d2312088b3aa8c25aef))
+
 ## 0.1.0 (2022-06-20)
 
 
