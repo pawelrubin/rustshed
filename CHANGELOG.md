@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/pawelrubin/rustshed/compare/v0.1.2...v0.1.3) (2022-06-20)
+
+
+### Bug Fixes
+
+* publish pypi. ([98fcb7c](https://github.com/pawelrubin/rustshed/commit/98fcb7c02699be3e50406a9f059cd32dcc161723))
+
 ## [0.1.2](https://github.com/pawelrubin/rustshed/compare/v0.1.1...v0.1.2) (2022-06-20)
 
 
