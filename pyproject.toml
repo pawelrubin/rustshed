@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rustshed"
-version = "0.1.0"
+version = "0.0.0"
 description = "Rust types in Python."
 authors = ["Paweł Rubin <pawelrubindev@gmail.com>"]
 license = "MIT License"
