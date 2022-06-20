@@ -1,13 +1,20 @@
 name: CI
 
-on: [push]
+on:
+  push:
+  pull_request:
+    types:
+      - "opened"
+      - "closed"
+      - "reopened"
+      - "synchronize"
 
 env:
   POETRY_VERSION: 1.1.13
   POETRY_VIRTUALENVS_IN_PROJECT: true
 
 jobs:
-  lint-and-test:
+  lint-n-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -65,4 +72,3 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./cov.xml
-          verbose: true # optional (default = false)

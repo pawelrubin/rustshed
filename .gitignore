@@ -4,3 +4,7 @@ __pycache__
 
 .coverage
 cov.xml
+.env
+.envrc
+
+dist
