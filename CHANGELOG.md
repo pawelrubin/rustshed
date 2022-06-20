@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/pawelrubin/rustshed/compare/v0.1.1...v0.1.2) (2022-06-20)
+
+
+### Bug Fixes
+
+* Add doc to ParseIntError. ([04dff82](https://github.com/pawelrubin/rustshed/commit/04dff829dfa3397c5d6cdc1628e0bf1a6dce7c79))
+* publish pypi on version tags. ([0ca610b](https://github.com/pawelrubin/rustshed/commit/0ca610b2a7913dbbfd36830422e08b07117df5ae))
+
 ## [0.1.1](https://github.com/pawelrubin/rustshed/compare/v0.1.0...v0.1.1) (2022-06-20)
 
 
