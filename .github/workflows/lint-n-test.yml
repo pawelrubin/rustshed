@@ -1,13 +1,6 @@
-name: CI
+name: lint and test
 
-on:
-  push:
-  pull_request:
-    types:
-      - "opened"
-      - "closed"
-      - "reopened"
-      - "synchronize"
+on: push
 
 env:
   POETRY_VERSION: 1.1.13
