@@ -43,6 +43,32 @@ class OptionShortcutError(Exception):
 
 
 class _BaseOption(ABC, Generic[T_co]):
+    """
+    Optional values.
+
+    The Option type represents an optional value: every `Option[T]` is either `Some[T]`
+    and contains a value of type `T`, or `Null` (`None` in Rust), and does not.
+
+    ### Example
+
+    Options are commonly paired with pattern matching
+    to query the presence of a value and take action,
+    always accounting for the None case.
+
+    ```
+    def divide(numerator: float, denominator: float) -> Option[float]:
+        if denominator == 0.0:
+            return Null
+        return Some(numerator / denominator)
+
+    match divide(2.0, 3.0):
+        case Some(value):
+            print(f"Result: {value}")
+        case Null:
+            print("Cannot divide by 0)
+    ```
+    """
+
     @abstractmethod
     def is_some(self) -> TypeGuard[Some[T_co]]:
         """
