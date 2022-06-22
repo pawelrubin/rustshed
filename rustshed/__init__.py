@@ -1,16 +1,9 @@
-from .option_result import (
-    Err,
-    Null,
-    NullType,
-    Ok,
-    Option,
-    Result,
-    Some,
-    result_shortcut,
-    to_option,
-    to_result,
-)
+from .option_result import Err, Null, NullType, Ok, Option, Result, Some
+from .option_shortcut import option_shortcut
 from .panic import Panic
+from .result_shortcut import result_shortcut
+from .to_option import to_option
+from .to_result import to_result
 
 __all__ = [
     "Option",
@@ -23,5 +16,6 @@ __all__ = [
     "to_option",
     "to_result",
     "result_shortcut",
+    "option_shortcut",
     "Panic",
 ]

@@ -5,8 +5,7 @@ from typing import Callable, SupportsIndex, TypeVar
 
 import pytest
 
-from rustshed.option_result import Null, Option, Some, option_shortcut, to_option
-from rustshed.panic import Panic
+from rustshed import Null, Option, Panic, Some, option_shortcut, to_option
 
 
 def test_is_some() -> None:

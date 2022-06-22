@@ -22,7 +22,6 @@ E_co = TypeVar("E_co", covariant=True)
 U = TypeVar("U")
 R = TypeVar("R")
 F = TypeVar("F")
-P = ParamSpec("P")
 
 
 class ResultShortcutError(Exception, Generic[E_co]):
@@ -455,17 +454,6 @@ Option = Some[T_co] | NullType
 Null = NullType()
 
 
-def to_option(f: Callable[P, T_co]) -> Callable[P, Option[T_co]]:
-    @wraps(f)
-    def wrapper(*args: P.args, **kwargs: P.kwargs) -> Option[T_co]:
-        try:
-            return Some(f(*args, **kwargs))
-        except:
-            return Null
-
-    return wrapper
-
-
 class _BaseResult(ABC, Generic[T_co, E_co]):
     @abstractmethod
     def is_ok(self) -> TypeGuard[Ok[T_co]]:
@@ -533,7 +521,7 @@ class _BaseResult(ABC, Generic[T_co, E_co]):
         """
 
     @abstractmethod
-    def map_or_else(self, default: Callable[[E_co], U], fn: Callable[[T_co], U]) -> U:
+    def map_or_else(self, default: Callable[[E_co], U], f: Callable[[T_co], U]) -> U:
         """
         Maps a Result<T, E> to U by applying fallback function default
         to a contained Err value, or function f to a contained Ok value.
@@ -687,8 +675,8 @@ class Ok(_BaseResult[T_co, Any]):
     def map_or(self, default: U, fn: Callable[[T_co], U]) -> U:
         return fn(self.value)
 
-    def map_or_else(self, default: Callable[[Any], U], fn: Callable[[T_co], U]) -> U:
-        return fn(self.value)
+    def map_or_else(self, default: Callable[[object], U], f: Callable[[T_co], U]) -> U:
+        return f(self.value)
 
     def map_err(self, op: Callable[[Any], Any]) -> Ok[T_co]:
         return self
@@ -762,7 +750,7 @@ class Err(_BaseResult[Any, E_co]):
     def map_or(self, default: U, fn: Callable[[Any], U]) -> U:
         return default
 
-    def map_or_else(self, default: Callable[[E_co], U], fn: Callable[[Any], U]) -> U:
+    def map_or_else(self, default: Callable[[E_co], U], f: Callable[[Any], U]) -> U:
         return default(self.error)
 
     def map_err(self, op: Callable[[E_co], F]) -> Err[F]:
@@ -810,54 +798,4 @@ class Err(_BaseResult[Any, E_co]):
 
 
 Result = Ok[T_co] | Err[E_co]
-
-
-E_rr = TypeVar("E_rr", bound=Exception)
-
-
-class to_result_type:
-    def __call__(self, f: Callable[P, T_co]) -> Callable[P, Result[T_co, Exception]]:
-        @wraps(f)
-        def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result[T_co, Exception]:
-            try:
-                return Ok(f(*args, **kwargs))
-            except Exception as err:
-                return Err(err)
-
-        return wrapper
-
-    def __getitem__(
-        self, _: type[E_rr]
-    ) -> Callable[[Callable[P, T_co]], Callable[P, Result[T_co, E_rr]]]:
-        return self  # type: ignore
-
-
-to_result = to_result_type()
-
 IOResult = Result[T_co, IOError]
-
-RT = TypeVar("RT")
-
-
-def result_shortcut(
-    f: Callable[P, Result[T_co, E_co]]
-) -> Callable[P, Result[T_co, E_co]]:
-    @wraps(f)
-    def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result[T_co, E_co]:
-        try:
-            return f(*args, **kwargs)
-        except ResultShortcutError[E_co] as err:
-            return err.error
-
-    return wrapper
-
-
-def option_shortcut(f: Callable[P, Option[T_co]]) -> Callable[P, Option[T_co]]:
-    @wraps(f)
-    def wrapper(*args: P.args, **kwargs: P.kwargs) -> Option[T_co]:
-        try:
-            return f(*args, **kwargs)
-        except OptionShortcutError:
-            return cast(Option[T_co], Null)
-
-    return wrapper

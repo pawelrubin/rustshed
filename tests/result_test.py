@@ -2,22 +2,12 @@ import os
 from dataclasses import dataclass
 from enum import Enum, auto
 from math import sqrt
-from multiprocessing.sharedctypes import Value
 from pathlib import Path
 from typing import Callable
 
 import pytest
 
-from rustshed.option_result import (
-    Err,
-    Null,
-    Ok,
-    Result,
-    Some,
-    result_shortcut,
-    to_result,
-)
-from rustshed.panic import Panic
+from rustshed import Err, Null, Ok, Panic, Result, Some, result_shortcut, to_result
 
 
 def test_is_ok() -> None:

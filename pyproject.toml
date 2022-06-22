@@ -36,7 +36,6 @@ strict = true
 pretty = true
 show_error_codes = true
 disallow_any_unimported = true
-disallow-any-expr = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
