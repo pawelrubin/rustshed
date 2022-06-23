@@ -28,7 +28,7 @@ def to_option(f: Callable[P, T]) -> Callable[P, Option[T]]:
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> Option[T]:
         try:
             return Some(f(*args, **kwargs))
-        except:
+        except Exception:  # pylint: disable=broad-except
             return Null
 
     return wrapper

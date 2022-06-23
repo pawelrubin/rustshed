@@ -36,7 +36,7 @@ class _to_result_type:
         def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result[T, Exception]:
             try:
                 return Ok(f(*args, **kwargs))
-            except Exception as err:
+            except Exception as err:  # pylint: disable=broad-except
                 return Err(err)
 
         return wrapper

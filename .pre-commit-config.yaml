@@ -9,18 +9,22 @@ repos:
       - id: check-toml
       - id: debug-statements
       - id: name-tests-test
+
   - repo: https://github.com/psf/black
     rev: 22.3.0
     hooks:
       - id: black
+
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.961
     hooks:
       - id: mypy
+
   - repo: https://github.com/pycqa/isort
     rev: 5.10.1
     hooks:
       - id: isort
+
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.34.0
     hooks:
@@ -31,4 +35,17 @@ repos:
     rev: v1.3.0
     hooks:
       - id: conventional-pre-commit
-        stages: [commit-msg]
+    stages: [commit-msg]
+
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args: [
+            "-rn", # Only display messages
+            "-sn", # Don't display the score
+          ]
+        exclude: examples/

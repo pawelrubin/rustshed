@@ -2,18 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from functools import wraps
-from typing import (
-    Any,
-    Callable,
-    Generic,
-    NoReturn,
-    ParamSpec,
-    TypeGuard,
-    TypeVar,
-    cast,
-    overload,
-)
+from typing import Any, Callable, Generic, NoReturn, TypeGuard, TypeVar, cast, overload
 
 from .panic import Panic
 
@@ -27,7 +16,7 @@ F = TypeVar("F")
 class ResultShortcutError(Exception, Generic[E_co]):
     def __init__(self, error: Err[E_co]) -> None:
         super().__init__(
-            f"The Q operator used without rustshed.result_shortcut decorator!"
+            "The Q operator used without rustshed.result_shortcut decorator!"
         )
         self.error = error
 
@@ -360,7 +349,7 @@ class Some(_BaseOption[T_co]):
                 return Some(val)
             case _:  # pragma: no cover
                 # it will never happen
-                raise
+                raise RuntimeError
 
     @property
     def Q(self) -> T_co:

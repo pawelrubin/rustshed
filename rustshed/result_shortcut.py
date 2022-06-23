@@ -3,19 +3,17 @@ from typing import Callable, ParamSpec, TypeVar
 
 from rustshed.option_result import Result, ResultShortcutError
 
-T_co = TypeVar("T_co")
-E_co = TypeVar("E_co")
+T = TypeVar("T")
+E = TypeVar("E")
 P = ParamSpec("P")
 
 
-def result_shortcut(
-    f: Callable[P, Result[T_co, E_co]]
-) -> Callable[P, Result[T_co, E_co]]:
+def result_shortcut(f: Callable[P, Result[T, E]]) -> Callable[P, Result[T, E]]:
     @wraps(f)
-    def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result[T_co, E_co]:
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result[T, E]:
         try:
             return f(*args, **kwargs)
-        except ResultShortcutError[E_co] as err:
+        except ResultShortcutError[E] as err:
             return err.error
 
     return wrapper
