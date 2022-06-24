@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/pawelrubin/rustshed/compare/v0.2.1...v0.3.0) (2022-06-24)
+
+
+### Features
+
+* Add missing methods to Option and Result. ([637006b](https://github.com/pawelrubin/rustshed/commit/637006b70fd659927093d95083d3472f2bb7a089))
+
+
+### Documentation
+
+* Add docs to BaseOption class. ([4a0c2ad](https://github.com/pawelrubin/rustshed/commit/4a0c2ad99cc3d4126625aa8e443d6483ac42b091))
+
 ## [0.2.1](https://github.com/pawelrubin/rustshed/compare/v0.2.0...v0.2.1) (2022-06-20)
 
 
