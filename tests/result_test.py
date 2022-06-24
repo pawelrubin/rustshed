@@ -1,4 +1,5 @@
 import os
+import sys
 from dataclasses import dataclass
 from enum import Enum, auto
 from math import sqrt
@@ -7,7 +8,18 @@ from typing import Callable
 
 import pytest
 
-from rustshed import Err, Null, Ok, Panic, Result, Some, result_shortcut, to_result
+from rustshed import (
+    Err,
+    Null,
+    Ok,
+    Option,
+    Panic,
+    Result,
+    Some,
+    result_shortcut,
+    to_io_result,
+    to_result,
+)
 
 
 def test_is_ok() -> None:
@@ -119,6 +131,38 @@ def test_map_err() -> None:
 
     x = Err(13)
     assert x.map_err(stringify) == Err("error code: 13")
+
+
+def test_inspect(capsys: pytest.CaptureFixture[str]) -> None:
+    @to_result[ValueError]
+    def parse(x: str) -> int:
+        return int(x)
+
+    _x: int = (
+        parse("4")
+        .inspect(lambda x: print(f"original: {x}"))
+        .map(lambda x: pow(x, 3))
+        .expect("failed to parse number")
+    )
+    assert capsys.readouterr().out == "original: 4\n"
+
+    assert Err("foo").inspect(print) == Err("foo")
+
+
+def test_inspect_err(capsys: pytest.CaptureFixture[str]) -> None:
+    @to_io_result
+    def read_to_str(path: str | Path) -> str:
+        with open(path, encoding="utf-8") as f:
+            return f.read()
+
+    read_to_str("address.txt").inspect_err(
+        lambda e: print(f"failed to read file: {e}", file=sys.stderr)
+    )
+    assert (
+        capsys.readouterr().err
+        == "failed to read file: [Errno 2] No such file or directory: 'address.txt'\n"
+    )
+    assert Ok(5).inspect_err(print) == Ok(5)
 
 
 def test_expect() -> None:
@@ -275,6 +319,18 @@ def test_contains_err() -> None:
 
     x = Err("Some other error message")
     assert x.contains_err("Some error message") is False
+
+
+def test_transpose() -> None:
+    x: Result[Option[int], str] = Ok(Some(5))
+    y: Option[Result[int, str]] = Some(Ok(5))
+    assert x.transpose() == y
+
+    x = Ok(Null)
+    assert x.transpose() == Null
+
+    x = Err("foo")
+    assert x.transpose() == Some(x)
 
 
 def test_result_shortcut() -> None:

@@ -45,11 +45,11 @@ class _to_result_type:
         self, _: type[E]
     ) -> Callable[[Callable[P, T]], Callable[P, Result[T, E]]]:
         """
-        This effectively enables generic type application for objects of this callable class
-
-
+        This effectively enables generic type application
+        for objects of this callable class
         """
         return self  # type: ignore
 
 
 to_result = _to_result_type()
+to_io_result = to_result[IOError]

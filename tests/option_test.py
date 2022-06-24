@@ -5,7 +5,17 @@ from typing import Callable, SupportsIndex, TypeVar
 
 import pytest
 
-from rustshed import Null, Option, Panic, Some, option_shortcut, to_option
+from rustshed import (
+    Err,
+    Null,
+    Ok,
+    Option,
+    Panic,
+    Result,
+    Some,
+    option_shortcut,
+    to_option,
+)
 
 
 def test_is_some() -> None:
@@ -74,6 +84,24 @@ def test_map() -> None:
     assert maybe_some_len == Some(13)
 
 
+def test_inspect(capsys: pytest.CaptureFixture[str]) -> None:
+    T = TypeVar("T")
+
+    @to_option
+    def get(xs: list[T], index: SupportsIndex) -> T:
+        return xs[index]
+
+    v = [1, 2, 3, 4, 5]
+
+    # prints "got: 4"
+    _x: Option[int] = get(v, 3).inspect(lambda x: print(f"got {x}"))
+
+    # prints nothing
+    _x = get(v, 5).inspect(lambda x: print(f"got {x}"))
+
+    assert capsys.readouterr().out == "got 4\n"
+
+
 def test_map_or() -> None:
     x: Option[str] = Some("foo")
     assert x.map_or(42, len) == 3
@@ -90,6 +118,22 @@ def test_map_or_else() -> None:
 
     x = Null
     assert x.map_or_else(lambda: 2 * k, len) == 42
+
+
+def test_ok_or() -> None:
+    x: Option[str] = Some("foo")
+    assert x.ok_or(0) == Ok("foo")
+
+    x = Null
+    assert x.ok_or(0) == Err(0)
+
+
+def test_ok_or_else() -> None:
+    x: Option[str] = Some("foo")
+    assert x.ok_or_else(lambda: 0) == Ok("foo")
+
+    x = Null
+    assert x.ok_or_else(lambda: 0) == Err(0)
 
 
 def test_and() -> None:
@@ -225,6 +269,20 @@ def test_unzip() -> None:
     assert x.unzip() == (Some(1), Some("hi"))
     assert y.unzip() == (Null, Null)
     assert Some(1).unzip() == (Null, Null)  # type: ignore
+
+
+def test_transpose() -> None:
+    z = 5
+    x: Result[Option[int], str] = Ok(Some(z))
+    y: Option[Result[int, str]] = Some(Ok(z))
+    assert y.transpose() == x
+
+    y = Some(Err("foo"))
+    x = Err("foo")
+    assert y.transpose() == x
+
+    y = Null
+    assert y.transpose() == Ok(Null)
 
 
 def test_flatten() -> None:
