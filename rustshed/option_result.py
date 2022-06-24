@@ -8,6 +8,8 @@ from .panic import Panic
 
 T_co = TypeVar("T_co", covariant=True)
 E_co = TypeVar("E_co", covariant=True)
+T = TypeVar("T")
+E = TypeVar("E")
 U = TypeVar("U")
 R = TypeVar("R")
 F = TypeVar("F")
@@ -41,7 +43,7 @@ class _BaseOption(ABC, Generic[T_co]):
 
     Options are commonly paired with pattern matching
     to query the presence of a value and take action,
-    always accounting for the None case.
+    always accounting for the Null case.
 
     ```
     def divide(numerator: float, denominator: float) -> Option[float]:
@@ -66,7 +68,8 @@ class _BaseOption(ABC, Generic[T_co]):
     @abstractmethod
     def is_some_and(self, f: Callable[[T_co], bool]) -> bool:
         """
-        Returns true if the option is a Some and the value inside of it matches a predicate.
+        Returns true if the option is a Some and the value inside
+        of it matches a predicate.
         """
 
     @abstractmethod
@@ -118,6 +121,12 @@ class _BaseOption(ABC, Generic[T_co]):
         """
 
     @abstractmethod
+    def inspect(self, f: Callable[[T_co], Any]) -> Option[T_co]:
+        """
+        Calls the provided closure with a reference to the contained value (if Some).
+        """
+
+    @abstractmethod
     def map_or(self, default: U, f: Callable[[T_co], U]) -> U:
         """
         Returns the provided default result (if Null),
@@ -133,6 +142,24 @@ class _BaseOption(ABC, Generic[T_co]):
         """
         Computes a default function result (if null),
         or applies a different function to the contained value (if any).
+        """
+
+    @abstractmethod
+    def ok_or(self, err: E) -> Result[T_co, E]:
+        """
+        Transforms the Option<T> into a Result<T, E>,
+        mapping Some(v) to Ok(v) and Null to Err(err).
+
+        Arguments passed to ok_or are eagerly evaluated;
+        if you are passing the result of a function call,
+        it is recommended to use ok_or_else, which is lazily evaluated.
+        """
+
+    @abstractmethod
+    def ok_or_else(self, err: Callable[[], E]) -> Result[T_co, E]:
+        """
+        Transforms the Option<T> into a Result<T, E>,
+        mapping Some(v) to Ok(v) and Null to Err(err()).
         """
 
     @abstractmethod
@@ -219,6 +246,15 @@ class _BaseOption(ABC, Generic[T_co]):
         """
 
     @abstractmethod
+    def transpose(self: _BaseOption[_BaseResult[T, E]]) -> Result[Option[T], E]:
+        """
+        Transposes an Option of a Result into a Result of an Option.
+
+        Null will be mapped to Ok(Null).
+        Some(Ok(T)) and Some(Err(E)) will be mapped to Ok(Some(T)) and Err(E).
+        """
+
+    @abstractmethod
     def flatten(self: _BaseOption[_BaseOption[U]]) -> Option[U]:
         """
         Converts from Option<Option<T>> to Option<T>.
@@ -260,11 +296,21 @@ class Some(_BaseOption[T_co]):
     def map(self, f: Callable[[T_co], U]) -> Some[U]:
         return Some(f(self.value))
 
+    def inspect(self, f: Callable[[T_co], Any]) -> Option[T_co]:
+        f(self.value)
+        return self
+
     def map_or(self, default: U, f: Callable[[T_co], U]) -> U:
         return f(self.value)
 
     def map_or_else(self, default: Callable[[], U], f: Callable[[T_co], U]) -> U:
         return f(self.value)
+
+    def ok_or(self, err: Any) -> Ok[T_co]:
+        return Ok(self.value)
+
+    def ok_or_else(self, err: Any) -> Ok[T_co]:
+        return Ok(self.value)
 
     def and_(self, optb: Option[U]) -> Option[U]:
         return optb
@@ -330,6 +376,28 @@ class Some(_BaseOption[T_co]):
                 return Null, Null
 
     @overload
+    def transpose(self: Some[Ok[T]]) -> Ok[Some[T]]:
+        ...  # pragma: no cover
+
+    @overload
+    def transpose(self: Some[Err[E]]) -> Err[E]:
+        ...  # pragma: no cover
+
+    @overload
+    def transpose(self: Option[Result[T, E]]) -> Result[Option[T], E]:
+        ...  # pragma: no cover
+
+    def transpose(self: Option[Result[T, E]]) -> Result[Option[T], E]:
+        match self:
+            case Some(Ok(value)):
+                return Ok(Some(value))
+            case Some(Err(error)):
+                return Err(error)
+            case _:  # pragma: no cover
+                # it will never happen
+                raise RuntimeError
+
+    @overload
     def flatten(self: Some[NullType]) -> NullType:
         ...  # pragma: no cover
 
@@ -385,11 +453,20 @@ class NullType(_BaseOption[Any]):
     def map(self, f: Callable[[Any], Any]) -> NullType:
         return self
 
+    def inspect(self, f: Callable[[Any], Any]) -> NullType:
+        return self
+
     def map_or(self, default: U, f: Callable[[Any], U]) -> U:
         return default
 
     def map_or_else(self, default: Callable[[], U], f: Callable[[Any], U]) -> U:
         return default()
+
+    def ok_or(self, err: E) -> Result[T_co, E]:
+        return Err(err)
+
+    def ok_or_else(self, err: Callable[[], E]) -> Result[T_co, E]:
+        return Err(err())
 
     def and_(self, optb: Option[Any]) -> NullType:
         return self
@@ -429,6 +506,9 @@ class NullType(_BaseOption[Any]):
 
     def unzip(self) -> tuple[NullType, NullType]:
         return (Null, Null)
+
+    def transpose(self: _BaseOption[Result[T, E]]) -> Result[NullType, E]:
+        return Ok(Null)
 
     def flatten(self: _BaseOption[_BaseOption[Any]]) -> NullType:
         return Null
@@ -527,6 +607,18 @@ class _BaseResult(ABC, Generic[T_co, E_co]):
 
         This function can be used to pass through a successful result
         while handling an error.
+        """
+
+    @abstractmethod
+    def inspect(self, f: Callable[[T_co], Any]) -> Result[T_co, E_co]:
+        """
+        Calls the provided closure with a reference to the contained value (if Ok).
+        """
+
+    @abstractmethod
+    def inspect_err(self, f: Callable[[E_co], Any]) -> Result[T_co, E_co]:
+        """
+        Calls the provided closure with a reference to the contained error (if Err).
         """
 
     @abstractmethod
@@ -630,6 +722,15 @@ class _BaseResult(ABC, Generic[T_co, E_co]):
         Returns true if the result is an Err value containing the given value.
         """
 
+    @abstractmethod
+    def transpose(self: _BaseResult[_BaseOption[T], E]) -> Option[Result[T, E]]:
+        """
+        Transposes a Result of an Option into an Option of a Result.
+
+        Ok(Null) will be mapped to Null.
+        Ok(Some(T)) and Err(E) will be mapped to Some(Ok(T)) and Some(Err(E)).
+        """
+
     @property
     @abstractmethod
     def Q(self) -> T_co:
@@ -670,6 +771,13 @@ class Ok(_BaseResult[T_co, Any]):
     def map_err(self, op: Callable[[Any], Any]) -> Ok[T_co]:
         return self
 
+    def inspect(self, f: Callable[[T_co], Any]) -> Ok[T_co]:
+        f(self.value)
+        return self
+
+    def inspect_err(self, f: Callable[[Any], Any]) -> Result[T_co, E_co]:
+        return self
+
     def expect(self, msg: str) -> T_co:
         return self.value
 
@@ -705,6 +813,28 @@ class Ok(_BaseResult[T_co, Any]):
 
     def contains_err(self, f: Any) -> bool:
         return False
+
+    @overload
+    def transpose(self: Ok[Some[T]]) -> Some[Ok[T]]:
+        ...  # pragma: no cover
+
+    @overload
+    def transpose(self: Ok[NullType]) -> NullType:
+        ...  # pragma: no cover
+
+    @overload
+    def transpose(self: Ok[Option[T]]) -> Option[Ok[T]]:
+        ...  # pragma: no cover
+
+    def transpose(self: Ok[Option[T]]) -> Option[Ok[T]]:
+        match self:
+            case Ok(Some(value)):
+                return Some(Ok(value))
+            case Ok(NullType()):
+                return Null
+            case _:  # pragma: no cover
+                # it will never happen
+                raise RuntimeError
 
     @property
     def Q(self) -> T_co:
@@ -745,6 +875,13 @@ class Err(_BaseResult[Any, E_co]):
     def map_err(self, op: Callable[[E_co], F]) -> Err[F]:
         return Err(op(self.error))
 
+    def inspect(self, f: Callable[[Any], Any]) -> Err[E_co]:
+        return self
+
+    def inspect_err(self, f: Callable[[E_co], Any]) -> Err[E_co]:
+        f(self.error)
+        return self
+
     def expect(self, msg: str) -> NoReturn:
         raise Panic(msg)
 
@@ -780,6 +917,9 @@ class Err(_BaseResult[Any, E_co]):
 
     def contains_err(self, f: object) -> bool:
         return self.error == f
+
+    def transpose(self: Err[E]) -> Some[Err[E]]:
+        return Some(self)
 
     @property
     def Q(self) -> NoReturn:

@@ -35,7 +35,7 @@ repos:
     rev: v1.3.0
     hooks:
       - id: conventional-pre-commit
-    stages: [commit-msg]
+        stages: [commit-msg]
 
   - repo: local
     hooks:
