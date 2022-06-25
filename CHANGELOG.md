@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/pawelrubin/rustshed/compare/v0.3.0...v0.4.0) (2022-06-25)
+
+
+### Features
+
+* Add proper typeguards. ([3c916c6](https://github.com/pawelrubin/rustshed/commit/3c916c63e25e935eee48d44ab38351f635dd5031))
+
+
+### Bug Fixes
+
+* Add py.typed marker. ([7924a7e](https://github.com/pawelrubin/rustshed/commit/7924a7e90ea3ad730288e37a4505e937d2010246))
+* Froze dataclasses. ([ade63af](https://github.com/pawelrubin/rustshed/commit/ade63af39ca12abc9fa8264555677ba3b334bb9e))
+
 ## [0.3.0](https://github.com/pawelrubin/rustshed/compare/v0.2.1...v0.3.0) (2022-06-24)
 
 
