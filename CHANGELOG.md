@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.1](https://github.com/pawelrubin/rustshed/compare/v0.4.0...v0.4.1) (2022-06-25)
+
+
+### Documentation
+
+* Add version and license badges. ([7e0e7b4](https://github.com/pawelrubin/rustshed/commit/7e0e7b492fb00fc9a59ecb2c31bbdd28d0a9acf3))
+* **examples:** Add pulling results out of options chapter. ([ce98784](https://github.com/pawelrubin/rustshed/commit/ce987840904634e43f4f48b8cc67ac5117344c86))
+
 ## [0.4.0](https://github.com/pawelrubin/rustshed/compare/v0.3.0...v0.4.0) (2022-06-25)
 
 
