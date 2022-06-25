@@ -53,6 +53,8 @@ def op(x: float, y: float) -> None:
             raise Panic("square root of negative number")
         case Ok(value):
             print(value)
+        case _:
+            pass  # pyright incorrectly detects that "Err[MathError]" wasn't handled
 
 
 if __name__ == "__main__":

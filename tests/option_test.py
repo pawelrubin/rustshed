@@ -200,7 +200,7 @@ def test_or() -> None:
 
     x = Some(2)
     y = Some(100)
-    assert x.or_(y) == Some(2)
+    assert x.or_(y) == Some(2)  # type: ignore
 
     x = Null
     y = Null

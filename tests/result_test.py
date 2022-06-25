@@ -91,7 +91,9 @@ def test_err() -> None:
 def test_map() -> None:
     numbers_as_strs = ["1", "2", "E", "A", "5"]
 
-    parse = to_result(int)
+    @to_result[ValueError]
+    def parse(x: str) -> int:
+        return int(x)
 
     numbers: list[int] = []
     for number_as_str in numbers_as_strs:
@@ -269,7 +271,7 @@ def test_or() -> None:
 
     x = Ok(2)
     y = Ok(100)
-    assert x.or_(y) == Ok(2)
+    assert x.or_(y) == Ok(2)  # type: ignore
 
 
 def test_or_else() -> None:
