@@ -12,7 +12,9 @@ classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: Implementation :: CPython",
+  "Typing :: Typed",
 ]
+include = ["rustshed/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
