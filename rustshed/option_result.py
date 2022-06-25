@@ -278,7 +278,7 @@ class _BaseOption(ABC, Generic[T_co]):
         """
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class Some(_BaseOption[T_co]):
     value: T_co
 
@@ -434,7 +434,7 @@ class Some(_BaseOption[T_co]):
         return self.value
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class NullType(_BaseOption[Any]):
     def __str__(self) -> str:
         return "Null"
@@ -757,7 +757,7 @@ class _BaseResult(ABC, Generic[T_co, E_co]):
         ...  # pragma: no cover
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class Ok(_BaseResult[T_co, Any]):
     value: T_co
 
@@ -861,7 +861,7 @@ class Ok(_BaseResult[T_co, Any]):
         return self.value
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class Err(_BaseResult[Any, E_co]):
     error: E_co
 
