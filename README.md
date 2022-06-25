@@ -1,6 +1,8 @@
 # rustshed
 
+[![Python 3.10](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/)
 [![codecov](https://codecov.io/gh/pawelrubin/rustshed/branch/main/graph/badge.svg?token=LV5XXHDSF5)](https://codecov.io/gh/pawelrubin/rustshed)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/pawelrubin/rustshed/blob/main/LICENSE)
 
 A collection of Rust types in Python with complete type annotations.
 
