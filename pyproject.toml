@@ -28,6 +28,7 @@ pytest = "^7.1.2"
 coverage = "^6.4.1"
 pre-commit = "^2.19.0"
 pytest-cov = "^3.0.0"
+pyright = "^1.1.255"
 
 [tool.isort]
 profile = "black"
@@ -38,10 +39,16 @@ strict = true
 pretty = true
 show_error_codes = true
 disallow_any_unimported = true
+warn_unused_ignores = false
 
 [[tool.mypy.overrides]]
 module = "tests.*"
 disallow_any_unimported = false
+
+[tool.pyright]
+pythonVersion = "3.10"
+include = ["rustshed", "examples", "tests"]
+typeCheckingMode = "strict"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
