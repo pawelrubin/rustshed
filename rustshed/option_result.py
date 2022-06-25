@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Callable, Generic, NoReturn, TypeGuard, TypeVar, cast, overload
+from typing import Any, Callable, Generic, NoReturn, TypeVar, cast, overload
 
 from .panic import Panic
 
@@ -60,9 +60,14 @@ class _BaseOption(ABC, Generic[T_co]):
     """
 
     @abstractmethod
-    def is_some(self) -> TypeGuard[Some[T_co]]:
+    def is_some(self) -> bool:
         """
         Returns true if the option is a Some value.
+
+        Note that this method does not return a TypeGuard.
+        This is impossible as per design of PEP-647 TypeGuards.
+
+        If you want to take advantage of a type guard, use `rustshed.is_some` instead.
         """
 
     @abstractmethod
@@ -73,9 +78,14 @@ class _BaseOption(ABC, Generic[T_co]):
         """
 
     @abstractmethod
-    def is_null(self) -> TypeGuard[NullType]:
+    def is_null(self) -> bool:
         """
         Returns true if the option is a Null value.
+
+        Note that this method does not return a TypeGuard.
+        This is impossible as per design of PEP-647 TypeGuards.
+
+        If you want to take advantage of a type guard, use `rustshed.is_null` instead.
         """
 
     @abstractmethod
@@ -272,13 +282,13 @@ class _BaseOption(ABC, Generic[T_co]):
 class Some(_BaseOption[T_co]):
     value: T_co
 
-    def is_some(self) -> TypeGuard[Some[T_co]]:
+    def is_some(self) -> bool:
         return True
 
     def is_some_and(self, f: Callable[[T_co], bool]) -> bool:
         return f(self.value)
 
-    def is_null(self) -> TypeGuard[NullType]:
+    def is_null(self) -> bool:
         return False
 
     def expect(self, msg: str) -> T_co:
@@ -429,13 +439,13 @@ class NullType(_BaseOption[Any]):
     def __str__(self) -> str:
         return "Null"
 
-    def is_some(self) -> TypeGuard[Some[Any]]:
+    def is_some(self) -> bool:
         return False
 
     def is_some_and(self, f: Callable[[Any], bool]) -> bool:
         return False
 
-    def is_null(self) -> TypeGuard[NullType]:
+    def is_null(self) -> bool:
         return True
 
     def expect(self, msg: str) -> NoReturn:
@@ -525,9 +535,14 @@ Null = NullType()
 
 class _BaseResult(ABC, Generic[T_co, E_co]):
     @abstractmethod
-    def is_ok(self) -> TypeGuard[Ok[T_co]]:
+    def is_ok(self) -> bool:
         """
         Returns true if the result is Ok.
+
+        Note that this method does not return a TypeGuard.
+        This is impossible as per design of PEP-647 TypeGuards.
+
+        If you want to take advantage of a type guard, use `rustshed.is_ok` instead.
         """
 
     @abstractmethod
@@ -538,9 +553,14 @@ class _BaseResult(ABC, Generic[T_co, E_co]):
         """
 
     @abstractmethod
-    def is_err(self) -> TypeGuard[Err[E_co]]:
+    def is_err(self) -> bool:
         """
         Returns true if the result is Err.
+
+        Note that this method does not return a TypeGuard.
+        This is impossible as per design of PEP-647 TypeGuards.
+
+        If you want to take advantage of a type guard, use `rustshed.is_err` instead.
         """
 
     @abstractmethod
@@ -741,13 +761,13 @@ class _BaseResult(ABC, Generic[T_co, E_co]):
 class Ok(_BaseResult[T_co, Any]):
     value: T_co
 
-    def is_ok(self) -> TypeGuard[Ok[T_co]]:
+    def is_ok(self) -> bool:
         return True
 
     def is_ok_and(self, f: Callable[[T_co], bool]) -> bool:
         return f(self.value)
 
-    def is_err(self) -> TypeGuard[Err[Any]]:
+    def is_err(self) -> bool:
         return False
 
     def is_err_and(self, f: Callable[[Any], bool]) -> bool:
@@ -845,13 +865,13 @@ class Ok(_BaseResult[T_co, Any]):
 class Err(_BaseResult[Any, E_co]):
     error: E_co
 
-    def is_ok(self) -> TypeGuard[Ok[Any]]:
+    def is_ok(self) -> bool:
         return False
 
     def is_ok_and(self, f: Callable[[Any], bool]) -> bool:
         return False
 
-    def is_err(self) -> TypeGuard[Err[E_co]]:
+    def is_err(self) -> bool:
         return True
 
     def is_err_and(self, f: Callable[[E_co], bool]) -> bool:
