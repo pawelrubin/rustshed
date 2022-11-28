@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from math import sqrt
 from pathlib import Path
-from typing import Callable
+from collections.abc import Callable
 
 import pytest
 

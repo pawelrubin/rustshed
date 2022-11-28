@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from functools import partial
 from math import sqrt
-from typing import Callable, SupportsIndex, TypeVar
+from typing import SupportsIndex, TypeVar
+from collections.abc import Callable
 
 import pytest
 
