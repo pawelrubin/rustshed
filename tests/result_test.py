@@ -1,10 +1,10 @@
 import os
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum, auto
 from math import sqrt
 from pathlib import Path
-from collections.abc import Callable
 
 import pytest
 
