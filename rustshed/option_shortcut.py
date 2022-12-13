@@ -1,6 +1,6 @@
+from collections.abc import Callable
 from functools import wraps
 from typing import ParamSpec, TypeVar
-from collections.abc import Callable
 
 from rustshed.option_result import Null, Option, OptionShortcutError
 
