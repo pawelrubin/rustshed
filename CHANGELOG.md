@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/pawelrubin/rustshed/compare/v0.4.1...v0.4.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* Skip local hooks in pre-commit.ci ([d2eb455](https://github.com/pawelrubin/rustshed/commit/d2eb455a36948d7fd2a27d46b2240a0daf25123a))
+
 ## [0.4.1](https://github.com/pawelrubin/rustshed/compare/v0.4.0...v0.4.1) (2022-06-25)
 
 
