@@ -19,7 +19,7 @@ jobs:
 
       - name: Build and publish to pypi
         if: ${{ steps.release.outputs.release_created }}
-        uses: JRubics/poetry-publish@v1.11
+        uses: JRubics/poetry-publish@v1.15
         with:
           pypi_token: ${{ secrets.PYPI_TOKEN }}
           ignore_dev_requirements: "yes"
