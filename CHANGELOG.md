@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/pawelrubin/rustshed/compare/v0.4.2...v0.5.0) (2022-12-22)
+
+
+### Features
+
+* Support Python 3.11 ([6f35a0a](https://github.com/pawelrubin/rustshed/commit/6f35a0ae44a5f3677bb9d9548641d0ada8689ee4))
+
 ## [0.4.2](https://github.com/pawelrubin/rustshed/compare/v0.4.1...v0.4.2) (2022-12-13)
 
 
