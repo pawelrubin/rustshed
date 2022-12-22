@@ -61,7 +61,7 @@ jobs:
       - name: Run tests
         run: poetry run pytest tests --cov-report xml:cov.xml --cov rustshed
 
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./cov.xml
