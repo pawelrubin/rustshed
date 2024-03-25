@@ -29,8 +29,7 @@ class ResultShortcutError(Exception, Generic[E_co]):
         return cls
 
 
-class OptionShortcutError(Exception):
-    ...
+class OptionShortcutError(Exception): ...
 
 
 class _BaseOption(ABC, Generic[T_co]):
@@ -342,16 +341,13 @@ class Some(_BaseOption[T_co]):
         return self if optb.is_null() else Null
 
     @overload
-    def zip(self, other: NullType) -> NullType:
-        ...  # pragma: no cover
+    def zip(self, other: NullType) -> NullType: ...  # pragma: no cover
 
     @overload
-    def zip(self, other: Some[U]) -> Some[tuple[T_co, U]]:
-        ...  # pragma: no cover
+    def zip(self, other: Some[U]) -> Some[tuple[T_co, U]]: ...  # pragma: no cover
 
     @overload
-    def zip(self, other: Option[U]) -> Option[tuple[T_co, U]]:
-        ...  # pragma: no cover
+    def zip(self, other: Option[U]) -> Option[tuple[T_co, U]]: ...  # pragma: no cover
 
     def zip(self, other: Option[U]) -> Option[tuple[T_co, U]]:
         match other:
@@ -361,16 +357,19 @@ class Some(_BaseOption[T_co]):
                 return Null
 
     @overload
-    def zip_with(self, other: NullType, f: Callable[[T_co, Any], Any]) -> NullType:
-        ...  # pragma: no cover
+    def zip_with(
+        self, other: NullType, f: Callable[[T_co, Any], Any]
+    ) -> NullType: ...  # pragma: no cover
 
     @overload
-    def zip_with(self, other: Some[U], f: Callable[[T_co, U], R]) -> Some[R]:
-        ...  # pragma: no cover
+    def zip_with(
+        self, other: Some[U], f: Callable[[T_co, U], R]
+    ) -> Some[R]: ...  # pragma: no cover
 
     @overload
-    def zip_with(self, other: Option[U], f: Callable[[T_co, U], R]) -> Option[R]:
-        ...  # pragma: no cover
+    def zip_with(
+        self, other: Option[U], f: Callable[[T_co, U], R]
+    ) -> Option[R]: ...  # pragma: no cover
 
     def zip_with(self, other: Option[U], f: Callable[[T_co, U], R]) -> Option[R]:
         match other:
@@ -387,16 +386,15 @@ class Some(_BaseOption[T_co]):
                 return Null, Null
 
     @overload
-    def transpose(self: Some[Ok[T]]) -> Ok[Some[T]]:
-        ...  # pragma: no cover
+    def transpose(self: Some[Ok[T]]) -> Ok[Some[T]]: ...  # pragma: no cover
 
     @overload
-    def transpose(self: Some[Err[E]]) -> Err[E]:
-        ...  # pragma: no cover
+    def transpose(self: Some[Err[E]]) -> Err[E]: ...  # pragma: no cover
 
     @overload
-    def transpose(self: Option[Result[T, E]]) -> Result[Option[T], E]:
-        ...  # pragma: no cover
+    def transpose(
+        self: Option[Result[T, E]]
+    ) -> Result[Option[T], E]: ...  # pragma: no cover
 
     def transpose(self: Option[Result[T, E]]) -> Result[Option[T], E]:
         match self:
@@ -409,16 +407,13 @@ class Some(_BaseOption[T_co]):
                 raise RuntimeError
 
     @overload
-    def flatten(self: Some[NullType]) -> NullType:
-        ...  # pragma: no cover
+    def flatten(self: Some[NullType]) -> NullType: ...  # pragma: no cover
 
     @overload
-    def flatten(self: Some[Some[U]]) -> Some[U]:
-        ...  # pragma: no cover
+    def flatten(self: Some[Some[U]]) -> Some[U]: ...  # pragma: no cover
 
     @overload
-    def flatten(self: Some[Option[U]]) -> Option[U]:
-        ...  # pragma: no cover
+    def flatten(self: Some[Option[U]]) -> Option[U]: ...  # pragma: no cover
 
     def flatten(self: Some[NullType | Some[U]]) -> NullType | Some[U]:
         match self:
@@ -495,16 +490,13 @@ class NullType(_BaseOption[Any]):
         return f()
 
     @overload
-    def xor(self, optb: NullType) -> NullType:
-        ...  # pragma: no cover
+    def xor(self, optb: NullType) -> NullType: ...  # pragma: no cover
 
     @overload
-    def xor(self, optb: Some[T_co]) -> Some[T_co]:
-        ...  # pragma: no cover
+    def xor(self, optb: Some[T_co]) -> Some[T_co]: ...  # pragma: no cover
 
     @overload
-    def xor(self, optb: Option[T_co]) -> Option[T_co]:
-        ...  # pragma: no cover
+    def xor(self, optb: Option[T_co]) -> Option[T_co]: ...  # pragma: no cover
 
     def xor(self, optb: Option[T_co]) -> Option[T_co]:
         return self if optb.is_null() else optb
@@ -754,8 +746,7 @@ class _BaseResult(ABC, Generic[T_co, E_co]):
 
     @property
     @abstractmethod
-    def Q(self) -> T_co:
-        ...  # pragma: no cover
+    def Q(self) -> T_co: ...  # pragma: no cover
 
 
 @dataclass(frozen=True, slots=True)
@@ -836,16 +827,13 @@ class Ok(_BaseResult[T_co, Any]):
         return False
 
     @overload
-    def transpose(self: Ok[Some[T]]) -> Some[Ok[T]]:
-        ...  # pragma: no cover
+    def transpose(self: Ok[Some[T]]) -> Some[Ok[T]]: ...  # pragma: no cover
 
     @overload
-    def transpose(self: Ok[NullType]) -> NullType:
-        ...  # pragma: no cover
+    def transpose(self: Ok[NullType]) -> NullType: ...  # pragma: no cover
 
     @overload
-    def transpose(self: Ok[Option[T]]) -> Option[Ok[T]]:
-        ...  # pragma: no cover
+    def transpose(self: Ok[Option[T]]) -> Option[Ok[T]]: ...  # pragma: no cover
 
     def transpose(self: Ok[Option[T]]) -> Option[Ok[T]]:
         match self:
