@@ -3,7 +3,7 @@ ci:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
@@ -14,28 +14,28 @@ repos:
       - id: name-tests-test
 
   - repo: https://github.com/psf/black
-    rev: 23.7.0
+    rev: 24.10.0
     hooks:
       - id: black
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.5.1
+    rev: v1.12.1
     hooks:
       - id: mypy
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.10.1
+    rev: v3.18.0
     hooks:
       - id: pyupgrade
         args: [--py310-plus]
 
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v2.4.0
+    rev: v3.6.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
