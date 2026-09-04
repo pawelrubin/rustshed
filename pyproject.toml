@@ -23,7 +23,7 @@ python = "^3.10"
 [tool.poetry.dev-dependencies]
 black = "^23.0.0"
 coverage = "^7.0.0"
-ipython = "^8.7.0"
+ipython = "^9.0.0"
 mypy = "^0.991"
 pre-commit = "^2.20.0"
 pylint = "^2.15.8"
