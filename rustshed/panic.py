@@ -1,2 +1,1 @@
-class Panic(RuntimeError):
-    ...  # pragma: no cover
+class Panic(RuntimeError): ...  # pragma: no cover
