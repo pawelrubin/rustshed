@@ -21,7 +21,7 @@ include = ["rustshed/py.typed"]
 python = "^3.10"
 
 [tool.poetry.dev-dependencies]
-black = "^23.0.0"
+black = "^24.0.0"
 coverage = "^7.0.0"
 ipython = "^8.7.0"
 mypy = "^0.991"
